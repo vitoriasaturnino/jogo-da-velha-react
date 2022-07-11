@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import "./index.css";
 
 // Tornando o Square para um componente de função que recebe props como entrada e retorna o que deverá ser renderizado.
@@ -17,15 +17,21 @@ class Board extends React.Component {
     super(props);
     this.state = {
       squares: Array(9).fill(null),
+      // sempre que uma jogada for feita xIsNext trocará seu valor determinando qual jogador será o próximo
+      xIsNext: true,
     };
   }
 
   // função handleClick manupula os eventos onClick
-  hancleClick(i) {
+  handleClick(i) {
     // o comando slice() cria uma cópia do array de quadrados para o modificar ao invés de faze-lo no array existente.
     const squares = this.state.squares.slice();
-    squares[i] = "X";
-    this.setState({ squares: squares });
+    // a mudança de "X" e "O" determinará os turnos
+    squares[i] = this.state.xIsNext ? "X" : "O";
+    this.setState({
+      squares: squares,
+      xIsNext: !this.state.xIsNext,
+    });
   }
 
   renderSquare(i) {
@@ -40,7 +46,7 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = "Next player: X";
+    const status = `Next player: ${this.state.xIsNext ? "X" : "O"}`;
 
     return (
       <div>
