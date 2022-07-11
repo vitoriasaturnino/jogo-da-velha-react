@@ -26,6 +26,10 @@ class Board extends React.Component {
   handleClick(i) {
     // o comando slice() cria uma cópia do array de quadrados para o modificar ao invés de faze-lo no array existente.
     const squares = this.state.squares.slice();
+    // verificando se algum jogador ja venceu ou se o quadrado já está ocupado
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
     // a mudança de "X" e "O" determinará os turnos
     squares[i] = this.state.xIsNext ? "X" : "O";
     this.setState({
@@ -46,7 +50,14 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = `Next player: ${this.state.xIsNext ? "X" : "O"}`;
+    // verificando se um jogador venceu
+    const winner = calculateWinner(this.state.squares);
+    let status;
+    if (winner) {
+      status = `Winner: ${winner}`;
+    } else {
+      status = `Next player: ${this.state.xIsNext ? "X" : "O"}`;
+    }
 
     return (
       <div>
@@ -91,3 +102,24 @@ class Game extends React.Component {
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Game />);
+
+// definindo o vencedor
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
