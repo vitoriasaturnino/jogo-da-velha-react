@@ -5,7 +5,7 @@ import "./index.css";
 // Square como componente de função (recebe props como entrada e retorna o que deve ser renderizado)
 function Square(props) {
   return (
-    <button className="square" onClick={props.onclick}>
+    <button className="square" onClick={props.onClick}>
       {props.value}
     </button>
   );
