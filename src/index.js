@@ -1,24 +1,15 @@
-import { isLabelWithInternallyDisabledControl } from "@testing-library/user-event/dist/utils";
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
-class Square extends React.Component {
-  render() {
-    return (
-      <button
-        className="square"
-        // setando o state do square com o valor "X" quando ele for clicado
-        /* passando a props/função onClick do Board para o Square */
-        onClick={() => this.props.onClick()}
-      >
-        {/* passando a props value do Board para o Square */}
-        {this.props.value}
-      </button>
-    );
-  }
+// Square como componente de função (recebe props como entrada e retorna o que deve ser renderizado)
+function Square(props) {
+  return (
+    <button className="square" onClick={props.onclick}>
+      {props.value}
+    </button>
+  );
 }
-
 class Board extends React.Component {
   // "Movendo o state para cima"
   // com o construtor abaixo estamos fazendo que o Board, component pai de todos os squares guarde o state de cada um deles
@@ -31,6 +22,7 @@ class Board extends React.Component {
 
   // funcção que fara a manipulação do event do square que for clicado
   handleClick(i) {
+    // a função slice() cria uma cópia do array a cada state modificado
     const squares = this.state.squares.slice();
     squares[i] = "X";
     this.setState({ squares: squares });
