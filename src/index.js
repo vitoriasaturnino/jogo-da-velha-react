@@ -1,35 +1,50 @@
+import { isLabelWithInternallyDisabledControl } from "@testing-library/user-event/dist/utils";
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
 class Square extends React.Component {
-  // construtor para definir o state do square
-  constructor(props) {
-    super(props);
-    // definindo state do square como null inicialmente
-    this.state = {
-      value: null,
-    };
-  }
-
   render() {
     return (
       <button
         className="square"
         // setando o state do square com o valor "X" quando ele for clicado
-        onClick={() => {
-          this.setState({ value: "X" });
-        }}
+        /* passando a props/função onClick do Board para o Square */
+        onClick={() => this.props.onClick()}
       >
-        {this.state.value}
+        {/* passando a props value do Board para o Square */}
+        {this.props.value}
       </button>
     );
   }
 }
 
 class Board extends React.Component {
+  // "Movendo o state para cima"
+  // com o construtor abaixo estamos fazendo que o Board, component pai de todos os squares guarde o state de cada um deles
+  constructor(props) {
+    super(props);
+    this.state = {
+      squares: Array(9).fill(null),
+    };
+  }
+
+  // funcção que fara a manipulação do event do square que for clicado
+  handleClick(i) {
+    const squares = this.state.squares.slice();
+    squares[i] = "X";
+    this.setState({ squares: squares });
+  }
+
   renderSquare(i) {
-    return <Square value={i} />;
+    return (
+      <Square
+        // definindo o valor do square a partir do seu state
+        value={this.state.squares[i]}
+        // atualizando o state do tabuleiro quando cada quadrado for clicado
+        onClick={() => this.handleClick(i)}
+      />
+    );
   }
 
   render() {
