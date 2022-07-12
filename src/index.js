@@ -17,6 +17,8 @@ class Board extends React.Component {
     super(props);
     this.state = {
       squares: Array(9).fill(null),
+      // definindo o X como primeiro jogador (sempre que um jogador fizer uma jogada o valor da variavel será trocado determinando asssim de quem é a vez, X ou O e o state do jogo é salvo)
+      xIsNext: true,
     };
   }
 
@@ -24,8 +26,13 @@ class Board extends React.Component {
   handleClick(i) {
     // a função slice() cria uma cópia do array a cada state modificado
     const squares = this.state.squares.slice();
-    squares[i] = "X";
-    this.setState({ squares: squares });
+    // verificando o valor do boolean para saber qual jogador fará a próxima jogada
+    squares[i] = this.state.xIsNext ? "X" : "O";
+    this.setState({
+      squares: squares,
+      // setando o state da rodada
+      xIsNext: !this.state.xIsNext,
+    });
   }
 
   renderSquare(i) {
@@ -40,7 +47,7 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = "Next player: X";
+    const status = `Next player: ${this.state.xIsNext ? "X" : "O"}`;
 
     return (
       <div>
