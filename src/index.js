@@ -1,6 +1,6 @@
 import React from "react";
-import { ReactDOM } from "react";
-import "./indexx.css";
+import ReactDOM from "react-dom";
+import "./index.css";
 
 class Square extends React.Component {
   render() {
