@@ -10,6 +10,7 @@ function Square(props) {
     </button>
   );
 }
+
 class Board extends React.Component {
   renderSquare(i) {
     return (
@@ -66,7 +67,7 @@ class Game extends React.Component {
     const history = this.state.history;
     const current = history[history.length - 1];
     // a função slice() cria uma cópia do array a cada state modificado
-    const squares = this.state.squares.slice();
+    const squares = current.squares.slice();
     // verificando se já existe um vencedor, se houver a função termina aqui ignorando qualquer novo click
     if (calculateWinner(squares) || squares[i]) {
       return;
@@ -84,16 +85,19 @@ class Game extends React.Component {
     });
   }
 
-  // A função utilizara a última entrada do history para determinar e exibir o status do jogo
+  // A função utilizara a última entrada do history spara determinar e exibir o status do jogo
   render() {
     const history = this.state.history;
     const current = history[history.length - 1];
     const winner = calculateWinner(current.squares);
 
+    // mapeando o historico de jogadas
+    // a variavel step quarda o tamanho do elemento history e move se refere ao indice do elemento history
     const moves = history.map((step, move) => {
       const desc = move ? `Go to move # ${move}` : "Go to game start";
       return (
-        <li>
+        // definindo a chave de cada item da lista utilizando o index da jogada
+        <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
@@ -113,7 +117,7 @@ class Game extends React.Component {
         <div className="game-board">
           <Board
             squares={current.squares}
-            onClick={(i) => this.handleClic(i)}
+            onClick={(i) => this.handleClick(i)}
           />
         </div>
         <div className="game-info">
