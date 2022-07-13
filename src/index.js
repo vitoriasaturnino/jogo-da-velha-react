@@ -57,6 +57,8 @@ class Game extends React.Component {
           squares: Array(9).fill(null),
         },
       ],
+      // stepNumber reflete ao reflete a jogada mostrada ao usuário nesse momento.
+      stepNumber: 0,
       // definindo o X como primeiro jogador (sempre que um jogador fizer uma jogada o valor da variavel será trocado determinando asssim de quem é a vez, X ou O e o state do jogo é salvo)
       xIsNext: true,
     };
@@ -64,7 +66,9 @@ class Game extends React.Component {
 
   // funcção que fara a manipulação do event do square que for clicado
   handleClick(i) {
-    const history = this.state.history;
+    // o history definido abaixo certifica que mesmo que uma viagem seja feita para uma jogada anterior e a partir deste ponto uma nova jogada seja feita, todo o "futuro" que já existia seja descartado
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    // renderiza apenas a jogada selecionada atualmente de acordo com o stepNumber
     const current = history[history.length - 1];
     // a função slice() cria uma cópia do array a cada state modificado
     const squares = current.squares.slice();
@@ -80,15 +84,25 @@ class Game extends React.Component {
           squares: squares,
         },
       ]),
+      // atualizando o stepNumber para exibir as jogadas de acordo com que elas são feitas
+      stepNumber: history.length,
       // setando o state da rodada
       xIsNext: !this.state.xIsNext,
+    });
+  }
+
+  // definindo o método to jump que viaja entre as jogadas já feitas de acordo com o step
+  jumpTo(step) {
+    this.setState({
+      stepNumber: step,
+      xIsNext: step % 2 === 0,
     });
   }
 
   // A função utilizara a última entrada do history spara determinar e exibir o status do jogo
   render() {
     const history = this.state.history;
-    const current = history[history.length - 1];
+    const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
     // mapeando o historico de jogadas
@@ -98,6 +112,7 @@ class Game extends React.Component {
       return (
         // definindo a chave de cada item da lista utilizando o index da jogada
         <li key={move}>
+          {/* a função jumpTo faz a viagem no tempo para a jogada referenciada pelo indice */}
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
